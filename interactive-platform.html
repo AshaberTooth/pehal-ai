@@ -239,7 +239,7 @@
         }
 
         .results-list li:before {
-            content: "✓ ";
+            content: "  ";
             color: #10b981;
             font-weight: 700;
             margin-right: 8px;
@@ -683,7 +683,7 @@
 
                 <!-- Results -->
                 <div id="intakeResults" style="display:none;">
-                    <div class="success-message">✓ Request submitted! Recommendations generated. Freelancers are viewing your request.</div>
+                    <div class="success-message">  Request submitted! Recommendations generated. Freelancers are viewing your request.</div>
 
                     <div class="results-container">
                         <div class="results-card">
@@ -925,7 +925,7 @@
                             <div class="bid-name">${f.name}</div>
                             <div class="bid-role">${f.role}</div>
                         </div>
-                        <div class="bid-rating">⭐ ${f.rating}</div>
+                        <div class="bid-rating">  ${f.rating}</div>
                     </div>
                     <div class="bid-rate">${f.rate}</div>
                     <div style="font-size: 13px; color: #6b7280; margin-bottom: 15px;">
@@ -960,7 +960,7 @@
                         <div class="solution-desc">${sol.desc}</div>
                         <div class="solution-stats">
                             <div class="stat-item">
-                                <div class="stat-value">⭐ ${sol.rating}</div>
+                                <div class="stat-value">  ${sol.rating}</div>
                                 <div class="stat-label">Rating</div>
                             </div>
                             <div class="stat-item">
@@ -980,7 +980,7 @@
         }
 
         function deploySolution(title) {
-            alert(`✓ Deployment initiated for "${title}"\n\nYou'll be contacted by the freelancer within 24 hours to finalize the deployment details.`);
+            alert(`  Deployment initiated for "${title}"\n\nYou'll be contacted by the freelancer within 24 hours to finalize the deployment details.`);
         }
 
         function logout() {
