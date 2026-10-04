@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pehal.ai - Interactive Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #f8fafc;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 16px 40px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: #0f172a;
+            cursor: pointer;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-tabs button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: #6b7280;
+            padding: 8px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .nav-tabs button.active {
+            color: #1e40af;
+            border-bottom-color: #1e40af;
+        }
+
+        .nav-tabs button:hover {
+            color: #1e40af;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-badge {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1e40af;
+            background: #dbeafe;
+            padding: 6px 12px;
+            border-radius: 20px;
+        }
+
+        .logout-btn {
+            background: none;
+            border: 1px solid #d1d5db;
+            color: #6b7280;
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            border-color: #1e40af;
+            color: #1e40af;
+        }
+
+        /* Main Container */
+        main {
+            margin-top: 70px;
+            padding: 40px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Page Sections */
+        section {
+            display: none;
+        }
+
+        section.active {
+            display: block;
+        }
+
+        h1 {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #0f172a;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 40px;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background: white;
+            border-radius: 8px;
+            padding: 40px;
+            max-width: 600px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #0f172a;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #1e40af;
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #1e40af;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: #1e3a8a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(30, 64, 175, 0.2);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1e40af;
+            border: 1px solid #1e40af;
+            margin-right: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #f0f9ff;
+        }
+
+        /* Results Section */
+        .results-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .results-card {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .results-card h3 {
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #0f172a;
+        }
+
+        .results-list {
+            list-style: none;
+        }
+
+        .results-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f3f4f6;
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        .results-list li:before {
+            content: "✓ ";
+            color: #10b981;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        .results-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Bids Section */
+        .bids-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .bid-card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s;
+        }
+
+        .bid-card:hover {
+            border-color: #1e40af;
+            box-shadow: 0 10px 25px rgba(30, 64, 175, 0.1);
+        }
+
+        .bid-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .bid-name {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .bid-rating {
+            font-size: 12px;
+            color: #f59e0b;
+            font-weight: 600;
+        }
+
+        .bid-role {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 15px;
+        }
+
+        .bid-rate {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #1e40af;
+            margin: 15px 0;
+        }
+
+        .bid-timeline {
+            font-size: 13px;
+            color: #6b7280;
+            padding: 10px;
+            background: #f9fafb;
+            border-radius: 4px;
+            margin: 15px 0;
+        }
+
+        .bid-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .bid-btn {
+            flex: 1;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .bid-btn-accept {
+            background: #10b981;
+            color: white;
+        }
+
+        .bid-btn-accept:hover {
+            background: #059669;
+        }
+
+        .bid-btn-contact {
+            background: white;
+            color: #1e40af;
+            border: 1px solid #1e40af;
+        }
+
+        .bid-btn-contact:hover {
+            background: #f0f9ff;
+        }
+
+        /* Marketplace Grid */
+        .marketplace-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .solution-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s;
+        }
+
+        .solution-card:hover {
+            border-color: #1e40af;
+            box-shadow: 0 10px 25px rgba(30, 64, 175, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .solution-header {
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            color: white;
+            padding: 20px;
+        }
+
+        .solution-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .solution-creator {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .solution-body {
+            padding: 20px;
+        }
+
+        .solution-desc {
+            color: #4b5563;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .solution-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .stat-item {
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: #1e40af;
+            font-size: 1.2em;
+        }
+
+        .stat-label {
+            color: #9ca3af;
+            font-size: 11px;
+        }
+
+        .solution-price {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #1e40af;
+            margin: 15px 0;
+        }
+
+        .deploy-btn {
+            width: 100%;
+            padding: 10px;
+            background: #1e40af;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .deploy-btn:hover {
+            background: #1e3a8a;
+        }
+
+        /* Dashboard Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            text-align: center;
+        }
+
+        .stat-card-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 5px;
+        }
+
+        .stat-card-label {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        /* Tabs within section */
+        .section-tabs {
+            display: flex;
+            gap: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 30px;
+        }
+
+        .section-tabs button {
+            background: none;
+            border: none;
+            padding: 12px 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: #6b7280;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .section-tabs button.active {
+            color: #1e40af;
+            border-bottom-color: #1e40af;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Messages */
+        .success-message {
+            background: #f0fdf4;
+            border: 1px solid #86efac;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #166534;
+            font-size: 14px;
+        }
+
+        .info-message {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #0c4a6e;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 12px 20px;
+            }
+
+            .nav-tabs {
+                gap: 15px;
+                font-size: 12px;
+            }
+
+            main {
+                padding: 20px;
+            }
+
+            .results-container {
+                grid-template-columns: 1fr;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo" onclick="goHome()">pehal.ai</div>
+        <ul class="nav-tabs">
+            <li><button class="nav-btn" data-tab="home">Home</button></li>
+            <li><button class="nav-btn" data-tab="intake">Submit Request</button></li>
+            <li><button class="nav-btn" data-tab="bids">My Bids</button></li>
+            <li><button class="nav-btn" data-tab="marketplace">Marketplace</button></li>
+            <li><button class="nav-btn" data-tab="profile">Profile</button></li>
+        </ul>
+        <div class="nav-right">
+            <span class="user-badge" id="userBadge">Customer</span>
+            <button class="logout-btn" onclick="logout()">Sign Out</button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+        <!-- HOME SECTION -->
+        <section id="home" class="active">
+            <h1>Welcome to pehal.ai</h1>
+            <p class="page-subtitle">AI Agent Marketplace with Enterprise Governance</p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-value" id="totalSolutions">6</div>
+                    <div class="stat-card-label">Pre-Built Solutions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value" id="totalFreelancers">50+</div>
+                    <div class="stat-card-label">Vetted Freelancers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value">2 weeks</div>
+                    <div class="stat-card-label">Avg. Deployment Time</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value" id="myBidsCount">0</div>
+                    <div class="stat-card-label">Your Active Requests</div>
+                </div>
+            </div>
+
+            <div style="background: white; border-radius: 8px; padding: 30px; border: 1px solid #e5e7eb;">
+                <h2 style="font-size: 1.5em; margin-bottom: 15px;">Getting Started</h2>
+                <p style="color: #6b7280; margin-bottom: 20px;">Choose your path:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="padding: 20px; background: #f0f9ff; border-radius: 6px; border-left: 4px solid #1e40af;">
+                        <h3 style="margin-bottom: 10px;">Browse Pre-Built Solutions</h3>
+                        <p style="font-size: 14px; color: #4b5563; margin-bottom: 15px;">Find ready-to-deploy AI agents and deploy in 2 weeks.</p>
+                        <button class="btn btn-secondary" onclick="switchTab('marketplace')">View Marketplace →</button>
+                    </div>
+                    <div style="padding: 20px; background: #f0fdf4; border-radius: 6px; border-left: 4px solid #10b981;">
+                        <h3 style="margin-bottom: 10px;">Submit Custom Request</h3>
+                        <p style="font-size: 14px; color: #4b5563; margin-bottom: 15px;">Post your requirements. Get competitive bids from vetted architects.</p>
+                        <button class="btn btn-secondary" onclick="switchTab('intake')" style="border-color: #10b981; color: #10b981;">Submit Request →</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INTAKE SECTION -->
+        <section id="intake">
+            <h1>Submit Your AI Agent Request</h1>
+            <p class="page-subtitle">Describe your needs. Get instant recommendations and competitive bids from vetted freelancers.</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <!-- Form -->
+                <div class="form-container">
+                    <h3 style="margin-bottom: 25px;">Your Requirements</h3>
+                    <form id="intakeForm">
+                        <div class="form-group">
+                            <label>Project Title *</label>
+                            <input type="text" id="projectTitle" placeholder="e.g., Customer Service Automation" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Business Problem *</label>
+                            <textarea id="businessProblem" placeholder="Describe your challenge and goals..." required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Industry *</label>
+                            <select id="industry" required>
+                                <option value="">Select Industry</option>
+                                <option value="banking">Banking & Financial Services</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="retail">Retail & E-commerce</option>
+                                <option value="manufacturing">Manufacturing</option>
+                                <option value="telecom">Telecom</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tech Stack Preference *</label>
+                            <select id="techStack" required>
+                                <option value="">Select Primary Cloud</option>
+                                <option value="azure">Microsoft Azure</option>
+                                <option value="aws">Amazon AWS</option>
+                                <option value="gcp">Google Cloud Platform</option>
+                                <option value="hybrid">Hybrid (Multi-cloud)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Budget Range *</label>
+                            <select id="budget" required>
+                                <option value="">Select Budget</option>
+                                <option value="5-10">$5K - $10K</option>
+                                <option value="10-25">$10K - $25K</option>
+                                <option value="25-50">$25K - $50K</option>
+                                <option value="50+">$50K+</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Timeline *</label>
+                            <select id="timeline" required>
+                                <option value="">Select Timeline</option>
+                                <option value="4-weeks">4 weeks</option>
+                                <option value="8-weeks">8 weeks</option>
+                                <option value="12-weeks">12 weeks</option>
+                                <option value="flexible">Flexible</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit & Get Recommendations</button>
+                    </form>
+                </div>
+
+                <!-- Results -->
+                <div id="intakeResults" style="display:none;">
+                    <div class="success-message">✓ Request submitted! Recommendations generated. Freelancers are viewing your request.</div>
+
+                    <div class="results-container">
+                        <div class="results-card">
+                            <h3>Recommended Agents</h3>
+                            <ul class="results-list" id="recommendedAgents">
+                            </ul>
+                        </div>
+
+                        <div class="results-card">
+                            <h3>Compliance Checklist</h3>
+                            <ul class="results-list" id="complianceChecklist">
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div style="background: white; border-radius: 8px; padding: 20px; border: 1px solid #e5e7eb; margin-top: 20px;">
+                        <h3 style="margin-bottom: 10px;">Estimated Timeline</h3>
+                        <p style="color: #4b5563; font-size: 14px;">Development: 4-8 weeks | Deployment: 1-2 weeks</p>
+                    </div>
+
+                    <button class="btn btn-secondary" onclick="resetForm()" style="margin-top: 20px;">← Submit Another Request</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- BIDS SECTION -->
+        <section id="bids">
+            <h1>Freelancer Bids</h1>
+            <p class="page-subtitle">Review competitive bids for your AI agent request</p>
+
+            <div id="noBidsMessage" class="info-message" style="max-width: 400px;">
+                No active requests yet. <a href="#" onclick="switchTab('intake'); return false;" style="color: #1e40af; font-weight: 600;">Submit a request</a> to receive bids from vetted freelancers.
+            </div>
+
+            <div id="bidsContainer" class="bids-container" style="display:none;">
+            </div>
+        </section>
+
+        <!-- MARKETPLACE SECTION -->
+        <section id="marketplace">
+            <h1>Containerized Solutions Marketplace</h1>
+            <p class="page-subtitle">Pre-built, production-ready AI agents. Deploy in 2 weeks. Support included.</p>
+
+            <div class="marketplace-grid" id="marketplaceGrid">
+            </div>
+        </section>
+
+        <!-- PROFILE SECTION -->
+        <section id="profile">
+            <h1>Your Profile</h1>
+            <p class="page-subtitle">Manage your account and preferences</p>
+
+            <div class="form-container" style="max-width: 500px;">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" value="customer@company.com" readonly style="background: #f9fafb;">
+                </div>
+
+                <div class="form-group">
+                    <label>Company</label>
+                    <input type="text" placeholder="Your Company Name">
+                </div>
+
+                <div class="form-group">
+                    <label>Role</label>
+                    <input type="text" placeholder="Your Role">
+                </div>
+
+                <div class="form-group">
+                    <label>Account Type</label>
+                    <select>
+                        <option selected>Customer</option>
+                        <option>Freelancer</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary">Save Changes</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Pre-built solutions data
+        const solutions = [
+            {
+                title: "Customer Service Agent",
+                creator: "Priya Sharma",
+                rating: 4.8,
+                desc: "Multi-channel support (email, Teams, Slack). 60% ticket resolution rate.",
+                price: "$8.5K",
+                deployed: 12
+            },
+            {
+                title: "Invoice Processing",
+                creator: "Raj Patel",
+                rating: 4.9,
+                desc: "Extracts invoice data from PDFs. 99.2% accuracy. Integrates SAP/Oracle.",
+                price: "$12K",
+                deployed: 8
+            },
+            {
+                title: "Fraud Detection",
+                creator: "Arjun Kumar",
+                rating: 4.9,
+                desc: "Detects anomalies in real-time. SIEM-integrated. PCI-compliant.",
+                price: "$15K",
+                deployed: 6
+            },
+            {
+                title: "HR Onboarding",
+                creator: "Neha Singh",
+                rating: 4.7,
+                desc: "Automates new hire workflows. Integrates with ServiceNow.",
+                price: "$6.5K",
+                deployed: 15
+            },
+            {
+                title: "Supply Chain Forecast",
+                creator: "Ananya Desai",
+                rating: 4.8,
+                desc: "Predicts inventory needs. Reduces stockouts by 35%.",
+                price: "$14K",
+                deployed: 5
+            },
+            {
+                title: "Compliance & Audit",
+                creator: "Vikram Iyer",
+                rating: 4.8,
+                desc: "Auto-generates audit reports. Tracks regulatory changes.",
+                price: "$11K",
+                deployed: 9
+            }
+        ];
+
+        // Recommendations data
+        const recommendations = {
+            banking: {
+                agents: ["Fraud Detection Agent", "KYC Verification Bot", "Transaction Risk Agent", "Customer Onboarding"],
+                compliance: ["SOC 2 Type II", "PCI DSS 3.2.1", "Regulatory Reporting", "Model Risk Management"]
+            },
+            healthcare: {
+                agents: ["Patient Scheduling Agent", "Medical Record Summarizer", "Appointment Reminder", "Billing Assistant"],
+                compliance: ["HIPAA Compliance", "HITECH", "Data Residency", "Encryption Standards"]
+            },
+            retail: {
+                agents: ["Inventory Optimization", "Customer Service Chatbot", "Demand Forecasting", "Personalization Engine"],
+                compliance: ["GDPR Compliance", "CCPA Compliance", "Data Retention", "Marketing Consent"]
+            },
+            manufacturing: {
+                agents: ["Predictive Maintenance", "Supply Chain Optimizer", "Quality Assurance", "Production Scheduler"],
+                compliance: ["ISO 9001", "Industry 4.0", "Safety Regulations", "Environmental Standards"]
+            },
+            telecom: {
+                agents: ["Network Anomaly Detector", "Churn Prediction", "Bill Dispute Resolution", "Service Provisioning"],
+                compliance: ["FCC Regulations", "Telecom Data Privacy", "Accessibility (ADA)", "Emergency Services"]
+            }
+        };
+
+        // Freelancer bids data (generated on form submit)
+        let currentBids = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup nav tabs
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    switchTab(this.dataset.tab);
+                });
+            });
+
+            // Setup intake form
+            document.getElementById('intakeForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitIntakeForm();
+            });
+
+            // Render marketplace
+            renderMarketplace();
+        });
+
+        function switchTab(tabName) {
+            // Hide all sections
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            // Show selected section
+            document.getElementById(tabName).classList.add('active');
+
+            // Update nav
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if(btn.dataset.tab === tabName) btn.classList.add('active');
+            });
+
+            window.scrollTo(0, 0);
+        }
+
+        function submitIntakeForm() {
+            const title = document.getElementById('projectTitle').value;
+            const problem = document.getElementById('businessProblem').value;
+            const industry = document.getElementById('industry').value;
+            const techStack = document.getElementById('techStack').value;
+            const budget = document.getElementById('budget').value;
+            const timeline = document.getElementById('timeline').value;
+
+            // Get recommendations
+            const recs = recommendations[industry] || recommendations.banking;
+
+            // Populate recommendations
+            const agentsList = document.getElementById('recommendedAgents');
+            agentsList.innerHTML = recs.agents.map(a => `<li>${a}</li>`).join('');
+
+            const complianceList = document.getElementById('complianceChecklist');
+            complianceList.innerHTML = recs.compliance.map(c => `<li>${c}</li>`).join('');
+
+            // Hide form, show results
+            document.getElementById('intakeForm').parentElement.style.display = 'none';
+            document.getElementById('intakeResults').style.display = 'block';
+
+            // Generate bids
+            generateBids(title, budget, timeline);
+
+            // Update count
+            document.getElementById('myBidsCount').textContent = '1';
+        }
+
+        function generateBids(title, budget, timeline) {
+            const freelancers = [
+                { name: "Priya Sharma", role: "AI/ML Engineer", rate: "$120/hr", projects: 12, rating: 4.8, available: "1 week" },
+                { name: "Raj Patel", role: "Solutions Architect", rate: "$150/hr", projects: 8, rating: 4.9, available: "Immediately" },
+                { name: "Neha Singh", role: "Senior Developer", rate: "$130/hr", projects: 15, rating: 4.7, available: "2 weeks" }
+            ];
+
+            currentBids = freelancers;
+
+            const container = document.getElementById('bidsContainer');
+            container.innerHTML = freelancers.map(f => `
+                <div class="bid-card">
+                    <div class="bid-header">
+                        <div>
+                            <div class="bid-name">${f.name}</div>
+                            <div class="bid-role">${f.role}</div>
+                        </div>
+                        <div class="bid-rating">⭐ ${f.rating}</div>
+                    </div>
+                    <div class="bid-rate">${f.rate}</div>
+                    <div style="font-size: 13px; color: #6b7280; margin-bottom: 15px;">
+                        ${f.projects} projects completed
+                    </div>
+                    <div class="bid-timeline">⏱ Available: ${f.available}</div>
+                    <div class="bid-actions">
+                        <button class="bid-btn bid-btn-contact">View Profile</button>
+                        <button class="bid-btn bid-btn-accept">Award Project</button>
+                    </div>
+                </div>
+            `).join('');
+
+            container.style.display = 'grid';
+        }
+
+        function resetForm() {
+            document.getElementById('intakeForm').reset();
+            document.getElementById('intakeForm').parentElement.style.display = 'block';
+            document.getElementById('intakeResults').style.display = 'none';
+        }
+
+        function renderMarketplace() {
+            const grid = document.getElementById('marketplaceGrid');
+            grid.innerHTML = solutions.map(sol => `
+                <div class="solution-card">
+                    <div class="solution-header">
+                        <div class="solution-title">${sol.title}</div>
+                        <div class="solution-creator">by ${sol.creator}</div>
+                    </div>
+                    <div class="solution-body">
+                        <div class="solution-desc">${sol.desc}</div>
+                        <div class="solution-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">⭐ ${sol.rating}</div>
+                                <div class="stat-label">Rating</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${sol.deployed}</div>
+                                <div class="stat-label">Deployed</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">2 wks</div>
+                                <div class="stat-label">Deploy</div>
+                            </div>
+                        </div>
+                        <div class="solution-price">${sol.price}</div>
+                        <button class="deploy-btn" onclick="deploySolution('${sol.title}')">Deploy Solution</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deploySolution(title) {
+            alert(`✓ Deployment initiated for "${title}"\n\nYou'll be contacted by the freelancer within 24 hours to finalize the deployment details.`);
+        }
+
+        function logout() {
+            if(confirm('Sign out of pehal.ai?')) {
+                alert('You have been signed out.');
+                location.reload();
+            }
+        }
+
+        function goHome() {
+            switchTab('home');
+        }
+    </script>
+</body>
+</html>

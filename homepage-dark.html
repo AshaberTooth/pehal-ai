@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pehal.ai - Deploy AI Agents in Days</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --primary-lighter: #dbeafe;
+            --text: #1a1a1a;
+            --text-light: #666;
+            --bg: #ffffff;
+            --bg-light: #f0f9ff;
+            --accent-active: #10b981;
+            --accent-pending: #f59e0b;
+            --border: #e5e7eb;
+            --dark-blue: #0f172a;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark-blue) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px 40px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: white;
+        }
+
+        .nav-cta {
+            background: white;
+            color: var(--primary);
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 60px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.2em;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            letter-spacing: -0.01em;
+            color: var(--primary);
+        }
+
+        .hero-highlight {
+            color: var(--primary-light);
+        }
+
+        .hero p {
+            font-size: 1.1em;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            max-width: 600px;
+            line-height: 1.8;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 50px;
+        }
+
+        .cta-primary {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+            color: white;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .cta-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .cta-secondary {
+            background: transparent;
+            color: var(--primary);
+            padding: 14px 32px;
+            border: 2px solid var(--primary);
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cta-secondary:hover {
+            background: var(--bg-light);
+            transform: translateY(-2px);
+        }
+
+        /* Stats Row */
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            max-width: 500px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat {
+            text-align: left;
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--primary-light);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Problem/Solution Section */
+        section {
+            padding: 80px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section h2 {
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: -0.01em;
+            color: var(--primary);
+        }
+
+        .section-subtitle {
+            font-size: 1em;
+            color: var(--text-light);
+            margin-bottom: 50px;
+            max-width: 600px;
+        }
+
+        /* Problem vs Solution Cards */
+        .problem-solution {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .problem-card, .solution-card {
+            padding: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+
+        .problem-card {
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+
+        .problem-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .solution-card {
+            background: #f0fdf4;
+            border-color: #86efac;
+        }
+
+        .solution-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .problem-card .card-title {
+            color: #dc2626;
+        }
+
+        .solution-card .card-title {
+            color: var(--accent-active);
+        }
+
+        .card-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+
+        .card-list li {
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .problem-card li:before {
+            content: "✗ ";
+            color: #dc2626;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .solution-card li:before {
+            content: "✓ ";
+            color: var(--accent-active);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        /* Journey Timeline */
+        .journey {
+            margin: 80px 0;
+            padding: 60px 40px;
+            background: var(--bg-light);
+            border-radius: 12px;
+        }
+
+        .journey h2 {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .timeline {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            top: 30px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-light) 0%, var(--primary-light) 48%, transparent 48%, transparent 52%, var(--primary-light) 52%, var(--primary-light) 100%);
+            z-index: 0;
+        }
+
+        .timeline-step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .timeline-node {
+            width: 60px;
+            height: 60px;
+            background: var(--bg);
+            border: 3px solid var(--primary-light);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: white;
+            font-size: 1.2em;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+        }
+
+        .timeline-label {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .timeline-description {
+            font-size: 13px;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        /* Offerings Grid */
+        .offerings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .offering-card {
+            padding: 30px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .offering-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-light), var(--primary));
+        }
+
+        .offering-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .offering-number {
+            display: inline-flex;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            margin-bottom: 15px;
+        }
+
+        .offering-title {
+            font-size: 1.15em;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--primary);
+        }
+
+        .offering-desc {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .offering-tier {
+            font-size: 12px;
+            color: var(--primary-light);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Avatar Q&A Section */
+        .qa-section {
+            padding: 60px 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark-blue) 100%);
+            color: white;
+            border-radius: 12px;
+            margin: 80px 0;
+        }
+
+        .qa-section h2 {
+            color: white;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .qa-subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+            font-size: 1em;
+        }
+
+        .qa-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .avatars-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .avatar-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .avatar-name {
+            font-weight: 600;
+            font-size: 1em;
+            margin-bottom: 5px;
+        }
+
+        .avatar-role {
+            font-size: 0.85em;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .qa-input-group {
+            margin-bottom: 30px;
+        }
+
+        .qa-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+            margin-bottom: 10px;
+            transition: all 0.3s;
+        }
+
+        .qa-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .qa-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .qa-button {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: var(--primary);
+            border: none;
+            border-radius: 4px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .qa-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .qa-responses {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .response {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+            padding: 15px;
+            font-size: 13px;
+            line-height: 1.6;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .response-header {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #dbeafe;
+        }
+
+        .response-text {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Ecosystem Visualization */
+        .ecosystem {
+            margin: 80px 0;
+            padding: 60px 40px;
+        }
+
+        .ecosystem h2 {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .ecosystem-diagram {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 30px;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .ecosystem-node {
+            padding: 30px;
+            border: 2px solid var(--primary-light);
+            border-radius: 8px;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(30, 58, 138, 0.05) 100%);
+        }
+
+        .ecosystem-node h3 {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+
+        .ecosystem-node p {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .ecosystem-center {
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.3em;
+            color: white;
+            padding: 40px;
+            border: 3px dashed white;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark-blue) 100%);
+        }
+
+        .ecosystem-arrow {
+            text-align: center;
+            font-size: 1.5em;
+            color: var(--primary-light);
+            font-weight: 700;
+        }
+
+        /* Metrics */
+        .metrics {
+            padding: 60px 40px;
+            background: var(--bg-light);
+        }
+
+        .metrics h2 {
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--primary);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .metric-box {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .metric-box:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.1);
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--primary-light);
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Final CTA */
+        .final-cta {
+            padding: 80px 40px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--dark-blue) 100%);
+            color: white;
+        }
+
+        .final-cta h2 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .final-cta p {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-white {
+            background: white;
+            color: var(--primary);
+            padding: 14px 40px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+        }
+
+        .cta-white:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-blue);
+            color: white;
+            padding: 50px 40px;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        footer a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        footer a:hover {
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 12px 20px;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                padding: 40px 20px;
+                margin-top: 60px;
+            }
+
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .problem-solution {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .timeline::before {
+                display: none;
+            }
+
+            .ecosystem-diagram {
+                grid-template-columns: 1fr;
+            }
+
+            .avatars-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .qa-responses {
+                grid-template-columns: 1fr;
+            }
+
+            section {
+                padding: 40px 20px;
+            }
+
+            .hero-bg {
+                display: none;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: slideInUp 0.6s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-logo">pehal.ai</div>
+        <ul class="nav-links">
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#offerings">Offerings</a></li>
+            <li><a href="#qa">Ask Us</a></li>
+            <li><a href="#ecosystem">Ecosystem</a></li>
+        </ul>
+        <button class="nav-cta" onclick="alert('Start your free intake at pehal.ai')">Get Started</button>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <h1>
+                Deploy AI Agents<br>
+                <span class="hero-highlight">in Days, Not Months</span>
+            </h1>
+            <p>
+                Stop waiting for expensive consultants. pehal.ai connects enterprises with vetted freelancers 
+                to build, deploy, and manage AI agents at unprecedented speed. Governance built in. Multi-cloud ready. 
+                Revenue shared.
+            </p>
+            <div class="hero-cta-group">
+                <button class="cta-primary" onclick="alert('Starting intake form...')">Start Free Intake</button>
+                <button class="cta-secondary" onclick="alert('Browsing marketplace...')">View Solutions</button>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-value">432+</div>
+                    <div class="stat-label">Vetted Freelancers</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">156</div>
+                    <div class="stat-label">Solutions Deployed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">14</div>
+                    <div class="stat-label">Days Avg to Deploy</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Problem vs Solution -->
+    <section>
+        <h2>The Problem with Traditional AI Adoption</h2>
+        <p class="section-subtitle">Enterprises face months of delays and six-figure consulting costs. There's a better way.</p>
+        
+        <div class="problem-solution">
+            <div class="problem-card">
+                <h3 class="card-title">Traditional Path</h3>
+                <ul class="card-list">
+                    <li>3-6 months to deployment</li>
+                    <li>$50-500K in consulting fees</li>
+                    <li>Fragmented governance (one-off setups)</li>
+                    <li>Vendor lock-in (one cloud)</li>
+                    <li>Limited post-deployment support</li>
+                    <li>No reusable templates</li>
+                </ul>
+            </div>
+            <div class="solution-card">
+                <h3 class="card-title">pehal.ai Way</h3>
+                <ul class="card-list">
+                    <li>2-4 weeks to deployment</li>
+                    <li>Transparent, usage-based pricing</li>
+                    <li>Reusable governance frameworks</li>
+                    <li>Deploy anywhere (Azure, AWS, GCP)</li>
+                    <li>Ongoing freelancer support included</li>
+                    <li>Pre-built solution library</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Journey Timeline -->
+    <div class="journey" id="how-it-works">
+        <h2>How Your AI Agent Gets Built</h2>
+        <div class="timeline">
+            <div class="timeline-step fade-in delay-1">
+                <div class="timeline-node">1</div>
+                <div class="timeline-label">Problem Intake</div>
+                <div class="timeline-description">Describe your business problem, tech stack, compliance needs</div>
+            </div>
+            <div class="timeline-step fade-in delay-2">
+                <div class="timeline-node">2</div>
+                <div class="timeline-label">Recommendations</div>
+                <div class="timeline-description">Get instant AI-powered recommendations + governance framework</div>
+            </div>
+            <div class="timeline-step fade-in delay-3">
+                <div class="timeline-node">3</div>
+                <div class="timeline-label">Freelancer Match</div>
+                <div class="timeline-description">Meet vetted architects matched to your exact needs</div>
+            </div>
+            <div class="timeline-step fade-in delay-2">
+                <div class="timeline-node">4</div>
+                <div class="timeline-label">Build & Deploy</div>
+                <div class="timeline-description">Containerized solution deployed to your cloud</div>
+            </div>
+            <div class="timeline-step fade-in delay-1">
+                <div class="timeline-node">5</div>
+                <div class="timeline-label">Live Agent</div>
+                <div class="timeline-description">Production-ready with ongoing support & monitoring</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offerings -->
+    <section id="offerings">
+        <h2>Five Services, One Platform</h2>
+        <p class="section-subtitle">Everything you need to adopt AI agents at enterprise scale.</p>
+        
+        <div class="offerings-grid">
+            <div class="offering-card fade-in delay-1">
+                <div class="offering-number">1</div>
+                <h3 class="offering-title">Intelligent Intake</h3>
+                <p class="offering-desc">
+                    Transform business problems into actionable roadmaps in 30 seconds. Free tier, Pro ($1.5K), or Enterprise ($5K+) with custom governance.
+                </p>
+                <div class="offering-tier">Free → Enterprise</div>
+            </div>
+
+            <div class="offering-card fade-in delay-2">
+                <div class="offering-number">2</div>
+                <h3 class="offering-title">Freelancer Matching</h3>
+                <p class="offering-desc">
+                    Algorithmic matching connects you with vetted architects. 35% skill, 25% experience, 20% quality — transparent scoring.
+                </p>
+                <div class="offering-tier">Free</div>
+            </div>
+
+            <div class="offering-card fade-in delay-3">
+                <div class="offering-number">3</div>
+                <h3 class="offering-title">Academy & Certification</h3>
+                <p class="offering-desc">
+                    3 learning pathways: AI Agent Developer, Governance Specialist, Senior Architect. Buddy program mentorship included.
+                </p>
+                <div class="offering-tier">$750 - $1.2K</div>
+            </div>
+
+            <div class="offering-card fade-in delay-1">
+                <div class="offering-number">4</div>
+                <h3 class="offering-title">Solutions Marketplace</h3>
+                <p class="offering-desc">
+                    156+ production-ready solutions (Customer Service, Invoice Processing, Fraud Detection, etc.) Deploy in 2 weeks.
+                </p>
+                <div class="offering-tier">$6.5K - $15K</div>
+            </div>
+
+            <div class="offering-card fade-in delay-2">
+                <div class="offering-number">5</div>
+                <h3 class="offering-title">Community & Revenue Sharing</h3>
+                <p class="offering-desc">
+                    Join a thriving freelancer network. Earn 50-80% revenue share. No infrastructure costs (we manage the cloud).
+                </p>
+                <div class="offering-tier">For Freelancers</div>
+            </div>
+
+            <div class="offering-card fade-in delay-3">
+                <div class="offering-number">6</div>
+                <h3 class="offering-title">Managed Infrastructure</h3>
+                <p class="offering-desc">
+                    Solutions deploy to pehal.ai's managed cloud (Azure, AWS, GCP). 99.9% SLA. Monitoring & support included.
+                </p>
+                <div class="offering-tier">Included</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Q&A Avatar Section -->
+    <div class="qa-section" id="qa">
+        <h2>Ask Our Team</h2>
+        <p class="qa-subtitle">Have questions? Ask Raj & Ashish — they know the platform inside and out.</p>
+        
+        <div class="qa-container">
+            <div class="avatars-wrapper">
+                <div class="avatar-box">
+                    <div class="avatar">
+                        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                            <!-- Head -->
+                            <circle cx="60" cy="50" r="30" fill="#d4a574"/>
+                            <!-- Hair -->
+                            <path d="M 30 50 Q 30 20 60 20 Q 90 20 90 50" fill="#3d2817"/>
+                            <!-- Beard -->
+                            <path d="M 38 75 Q 60 85 82 75 Q 80 80 60 88 Q 40 80 38 75" fill="#5d4037"/>
+                            <path d="M 40 70 Q 60 80 80 70" stroke="#5d4037" stroke-width="2" fill="none"/>
+                            <!-- Eyes -->
+                            <circle cx="48" cy="45" r="3" fill="#1a1a1a"/>
+                            <circle cx="72" cy="45" r="3" fill="#1a1a1a"/>
+                            <!-- Nose -->
+                            <line x1="60" y1="50" x2="60" y2="65" stroke="#8b6f47" stroke-width="1"/>
+                            <!-- Mouth -->
+                            <path d="M 50 70 Q 60 75 70 70" stroke="#8b6f47" stroke-width="1.5" fill="none"/>
+                            <!-- Neck and Shirt -->
+                            <rect x="45" y="80" width="30" height="40" fill="#2c3e50"/>
+                        </svg>
+                    </div>
+                    <div class="avatar-name">Raj Patel</div>
+                    <div class="avatar-role">Solutions Architect</div>
+                </div>
+
+                <div class="avatar-box">
+                    <div class="avatar">
+                        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+                            <!-- Head -->
+                            <circle cx="60" cy="50" r="30" fill="#d4a574"/>
+                            <!-- Hair -->
+                            <path d="M 30 50 Q 30 20 60 20 Q 90 20 90 50" fill="#1a1a1a"/>
+                            <!-- Smooth face (no beard) -->
+                            <!-- Eyes -->
+                            <circle cx="48" cy="45" r="3" fill="#1a1a1a"/>
+                            <circle cx="72" cy="45" r="3" fill="#1a1a1a"/>
+                            <!-- Eyebrows -->
+                            <path d="M 45 40 Q 50 38 55 40" stroke="#5d4037" stroke-width="1.5" fill="none"/>
+                            <path d="M 65 40 Q 70 38 75 40" stroke="#5d4037" stroke-width="1.5" fill="none"/>
+                            <!-- Nose -->
+                            <line x1="60" y1="50" x2="60" y2="65" stroke="#8b6f47" stroke-width="1"/>
+                            <!-- Mouth -->
+                            <path d="M 50 72 Q 60 76 70 72" stroke="#8b6f47" stroke-width="1.5" fill="none"/>
+                            <!-- Neck and Shirt -->
+                            <rect x="45" y="80" width="30" height="40" fill="#3b82f6"/>
+                        </svg>
+                    </div>
+                    <div class="avatar-name">Ashish Kumar</div>
+                    <div class="avatar-role">Platform Lead</div>
+                </div>
+            </div>
+
+            <div class="qa-input-group">
+                <input 
+                    type="text" 
+                    class="qa-input" 
+                    id="qaInput" 
+                    placeholder="Ask us anything about pehal.ai, freelancing, AI agents, pricing, deployment..."
+                >
+                <button class="qa-button" onclick="getAnswer()">Get Answers</button>
+            </div>
+
+            <div class="qa-responses">
+                <div class="response">
+                    <div class="response-header">Raj Patel's Take:</div>
+                    <div class="response-text" id="raj-response">
+                        Ask a question and I'll share insights from building 50+ enterprise solutions on pehal.ai.
+                    </div>
+                </div>
+                <div class="response">
+                    <div class="response-header">Ashish Kumar's Take:</div>
+                    <div class="response-text" id="ashish-response">
+                        I'll give you the technical and strategic perspective on how pehal.ai works.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ecosystem -->
+    <section class="ecosystem" id="ecosystem">
+        <h2>The pehal.ai Flywheel</h2>
+        <p class="section-subtitle">A two-sided marketplace that compounds in value.</p>
+        
+        <div class="ecosystem-diagram">
+            <div class="ecosystem-node fade-in delay-1">
+                <h3>Enterprise Customers</h3>
+                <p>Need AI agents fast. Want governance built in. Prefer multi-cloud optionality.</p>
+            </div>
+
+            <div class="ecosystem-arrow">↔</div>
+
+            <div class="ecosystem-node fade-in delay-2">
+                <h3>Vetted Freelancers</h3>
+                <p>Build solutions. Earn 50-80% revenue. No infrastructure overhead. Passive income from marketplace.</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; text-align: center;">
+            <div class="ecosystem-center fade-in delay-3">
+                pehal.ai<br>
+                <span style="font-size: 0.7em; font-weight: 400; color: rgba(255, 255, 255, 0.8); margin-top: 8px; display: block;">
+                    AI Governance Templates<br>
+                    Recommendation Engine<br>
+                    Infrastructure & Deployments
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Metrics -->
+    <section class="metrics">
+        <h2>Platform Performance</h2>
+
+        <div class="metrics-grid">
+            <div class="metric-box fade-in delay-1">
+                <div class="metric-value">2.1x</div>
+                <div class="metric-label">Faster Than Traditional</div>
+            </div>
+
+            <div class="metric-box fade-in delay-2">
+                <div class="metric-value">60%</div>
+                <div class="metric-label">Time-to-Value Reduction</div>
+            </div>
+
+            <div class="metric-box fade-in delay-3">
+                <div class="metric-value">85%</div>
+                <div class="metric-label">Annual Renewal Rate</div>
+            </div>
+
+            <div class="metric-box fade-in delay-1">
+                <div class="metric-value">$120K</div>
+                <div class="metric-label">Avg Year 1 Savings</div>
+            </div>
+
+            <div class="metric-box fade-in delay-2">
+                <div class="metric-value">4.8</div>
+                <div class="metric-label">Freelancer Rating</div>
+            </div>
+
+            <div class="metric-box fade-in delay-3">
+                <div class="metric-value">99.9%</div>
+                <div class="metric-label">Uptime SLA</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta">
+        <h2>Ready to Deploy Your First AI Agent?</h2>
+        <p>
+            Join 432+ freelancers and 50+ enterprise customers using pehal.ai. 
+            Start with a free intake and get recommendations in 30 seconds.
+        </p>
+        <button class="cta-white" onclick="alert('Redirecting to pehal.ai intake...')">Start Free Intake</button>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>
+            © pehal.ai 2026 | 
+            <a href="#">Docs</a> · 
+            <a href="#">Community</a> · 
+            <a href="#">Status</a> · 
+            <a href="#">Terms</a>
+        </p>
+    </footer>
+
+    <script>
+        // Q&A Knowledge Base
+        const qaBase = {
+            "pricing": {
+                raj: "Our pricing is transparent and usage-based. Free intake tier gets you recommendations in 30 seconds. Pro tier ($1.5K-$3.5K) includes custom governance. Enterprise ($5K+) has dedicated support. Freelancers earn 50-80% revenue share on every solution sold.",
+                ashish: "We don't believe in hidden costs. You pay for: intake/advisory, freelancer services (split 80-20), infrastructure (managed by us), and optional support tiers. Multi-cloud deployments cost the same whether it's Azure, AWS, or GCP."
+            },
+            "freelancer": {
+                raj: "As a freelancer, you get 50-80% of every solution sold, no infrastructure costs (we manage that), access to governance templates that cut dev time by 40%, and passive income from marketplace sales. The buddy program gives you mentorship and free training.",
+                ashish: "Freelancers own their IP. We handle deployment, monitoring, and customer support. You focus on building great agents. Join 432+ freelancers already earning on pehal.ai. Average freelancer makes $13K-$24K in first 6 months."
+            },
+            "deployment": {
+                raj: "Average deployment is 14 days from problem intake to live agent. We handle containerization, testing, and multi-cloud orchestration. You choose: managed (we run it), BYOC (your cloud), or on-premises.",
+                ashish: "We use Docker + Kubernetes under the hood. Agents deploy to Azure, AWS, or GCP with 99.9% uptime SLA. Scaling is automatic. Monitoring and security patches are included in managed deployment."
+            },
+            "governance": {
+                raj: "Governance frameworks come built-in for every industry: Banking (SOC 2, PCI DSS, regulatory reporting), Healthcare (HIPAA, HITECH), Retail (GDPR, CCPA), Manufacturing (ISO 9001), Telecom (FCC compliance). Templates reduce setup time by 60%.",
+                ashish: "Every solution gets an audit trail, explainability reporting, bias testing, and compliance validation. These aren't add-ons — they're foundational. That's the pehal.ai difference."
+            },
+            "support": {
+                raj: "Tier 1 support (included) gives you documentation and community forum access. Tier 2 ($1.5K/month) includes 4 hours/month of freelancer support. Tier 3 ($3K/month) is dedicated Slack + on-call.",
+                ashish: "The freelancer who built your solution is your primary contact. If they're busy, pehal.ai escalation team jumps in. We track SLA religiously: <4 hours for critical issues, <24 hours for non-critical."
+            },
+            "compliance": {
+                raj: "We maintain SOC 2 Type II, ISO 27001, and can support HIPAA, PCI DSS, GDPR deployments. Data residency options (US, EU, APAC) available. Zero-trust architecture.",
+                ashish: "Compliance is non-negotiable. Every solution audit log is immutable. Regulatory change monitoring is automated. We fail audit items conservatively, not optimistically."
+            },
+            "default": {
+                raj: "Great question! I'd cover how pehal.ai connects enterprises with vetted freelancers to deploy AI agents in 2-4 weeks instead of 3-6 months. We handle governance, infrastructure, and revenue sharing so you focus on solving problems.",
+                ashish: "We solve the AI adoption bottleneck. Enterprises get speed + governance + choice (any cloud). Freelancers get network effects + passive income + no ops overhead. That's the flywheel."
+            }
+        };
+
+        function getAnswer() {
+            const input = document.getElementById('qaInput').value.toLowerCase();
+            
+            let rajResponse = qaBase.default.raj;
+            let ashishResponse = qaBase.default.ashish;
+
+            // Route to relevant answers
+            if (input.includes('price') || input.includes('cost') || input.includes('fee')) {
+                rajResponse = qaBase.pricing.raj;
+                ashishResponse = qaBase.pricing.ashish;
+            } else if (input.includes('freelancer') || input.includes('earn') || input.includes('revenue')) {
+                rajResponse = qaBase.freelancer.raj;
+                ashishResponse = qaBase.freelancer.ashish;
+            } else if (input.includes('deploy') || input.includes('time') || input.includes('how long')) {
+                rajResponse = qaBase.deployment.raj;
+                ashishResponse = qaBase.deployment.ashish;
+            } else if (input.includes('govern') || input.includes('compliance') || input.includes('audit')) {
+                rajResponse = qaBase.governance.raj;
+                ashishResponse = qaBase.compliance.ashish;
+            } else if (input.includes('support') || input.includes('help') || input.includes('sla')) {
+                rajResponse = qaBase.support.raj;
+                ashishResponse = qaBase.support.ashish;
+            }
+
+            document.getElementById('raj-response').textContent = rajResponse;
+            document.getElementById('ashish-response').textContent = ashishResponse;
+        }
+
+        // Allow Enter key to submit
+        document.getElementById('qaInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                getAnswer();
+            }
+        });
+
+        // Scroll reveal animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !entry.target.classList.contains('fade-in')) {
+                    entry.target.classList.add('fade-in');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.offering-card, .metric-box, .problem-card, .solution-card, .ecosystem-node').forEach(el => {
+            if (!el.classList.contains('fade-in')) {
+                observer.observe(el);
+            }
+        });
+
+        // Smooth scroll navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

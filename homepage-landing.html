@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pehal.ai - AI Agent Marketplace & Governance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e5e7eb;
+            padding: 20px 40px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #0f172a;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .role-badge {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e40af;
+            padding: 6px 12px;
+            background: #dbeafe;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .role-badge.active {
+            display: inline-block;
+        }
+
+        .switch-role-btn {
+            background: none;
+            border: 1px solid #d1d5db;
+            color: #6b7280;
+            padding: 8px 14px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .switch-role-btn:hover {
+            border-color: #1e40af;
+            color: #1e40af;
+            background: #f0f9ff;
+        }
+
+        /* Landing Screen */
+        .landing-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 40px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        .landing-screen.hidden {
+            display: none;
+        }
+
+        .landing-content {
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .landing-content h1 {
+            font-size: 3.5em;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+        }
+
+        .landing-content p {
+            font-size: 16px;
+            color: #4b5563;
+            margin-bottom: 50px;
+            line-height: 1.8;
+        }
+
+        .role-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .role-btn {
+            padding: 24px 32px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #0f172a;
+        }
+
+        .role-btn:hover {
+            border-color: #1e40af;
+            background: #f0f9ff;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(30, 64, 175, 0.1);
+        }
+
+        .role-btn.freelancer-btn {
+            border-color: #10b981;
+        }
+
+        .role-btn.freelancer-btn:hover {
+            border-color: #059669;
+            background: #f0fdf4;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.1);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: none;
+            margin-top: 80px;
+        }
+
+        .main-content.active {
+            display: block;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 80px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-radius: 12px;
+            margin-bottom: 60px;
+        }
+
+        .hero h1 {
+            font-size: 2.8em;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: #0f172a;
+        }
+
+        .hero p {
+            font-size: 16px;
+            color: #4b5563;
+            margin-bottom: 30px;
+            max-width: 700px;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #1e40af;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1e3a8a;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(30, 64, 175, 0.2);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #1e40af;
+            border: 1px solid #1e40af;
+        }
+
+        .btn-secondary:hover {
+            background: #f0f9ff;
+        }
+
+        /* Features Grid */
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px 80px;
+        }
+
+        .section-title {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #0f172a;
+        }
+
+        .section-subtitle {
+            font-size: 16px;
+            color: #6b7280;
+            margin-bottom: 50px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .feature-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 40px;
+            background: white;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feature-card:hover {
+            border-color: #1e40af;
+            box-shadow: 0 15px 35px rgba(30, 64, 175, 0.08);
+            transform: translateY(-5px);
+        }
+
+        .feature-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #0f172a;
+        }
+
+        .feature-desc {
+            color: #4b5563;
+            line-height: 1.7;
+            font-size: 15px;
+            margin-bottom: 25px;
+            flex-grow: 1;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .feature-list li {
+            font-size: 14px;
+            color: #4b5563;
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .feature-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #1e40af;
+            font-weight: 700;
+        }
+
+        .feature-cta {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .feature-btn {
+            background: #1e40af;
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .feature-btn:hover {
+            background: #1e3a8a;
+        }
+
+        /* Marketplace Grid */
+        .marketplace-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .solution-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        .solution-card:hover {
+            border-color: #1e40af;
+            box-shadow: 0 15px 35px rgba(30, 64, 175, 0.08);
+            transform: translateY(-5px);
+        }
+
+        .solution-header {
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+            color: white;
+            padding: 20px;
+        }
+
+        .solution-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .solution-desc {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+
+        .solution-body {
+            padding: 20px;
+        }
+
+        .solution-content {
+            color: #4b5563;
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .solution-price {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 15px;
+        }
+
+        .solution-timeline {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f9fafb;
+            border-radius: 4px;
+        }
+
+        .deploy-btn {
+            background: #1e40af;
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .deploy-btn:hover {
+            background: #1e3a8a;
+        }
+
+        /* Stats Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        /* Footer */
+        footer {
+            background: #0f172a;
+            color: white;
+            padding: 60px 40px;
+            margin-top: 100px;
+            text-align: center;
+        }
+
+        footer p {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 15px 20px;
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+
+            .role-btn {
+                font-size: 16px;
+                padding: 18px 24px;
+            }
+
+            .landing-content h1 {
+                font-size: 2em;
+            }
+
+            .hero {
+                padding: 40px 20px;
+                margin-bottom: 40px;
+            }
+
+            .hero h1 {
+                font-size: 1.8em;
+            }
+
+            .features-container {
+                padding: 0 20px 40px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .role-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">pehal.ai</div>
+        <div class="nav-right">
+            <span class="role-badge active" id="roleBadge"></span>
+            <button class="switch-role-btn" id="switchRoleBtn" style="display:none;">Switch Role</button>
+        </div>
+    </nav>
+
+    <!-- Landing Screen -->
+    <div class="landing-screen" id="landingScreen">
+        <div class="landing-content">
+            <h1>Welcome to pehal.ai</h1>
+            <p>The AI Agent Marketplace with Enterprise Governance</p>
+            <div class="role-buttons">
+                <button class="role-btn freelancer-btn" onclick="selectRole('freelancer')">
+                    👤 I'm a Freelancer
+                </button>
+                <button class="role-btn" onclick="selectRole('customer')">
+                    🏢 I'm a Customer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- FREELANCER PATH -->
+        <div id="freelancerPath" style="display:none;">
+            <div class="hero">
+                <h1>Build AI Agents, Earn Recurring Revenue</h1>
+                <p>Join a network of vetted architects. Access governance templates, mentorship, and a community. Earn 50-80% on every project you build.</p>
+                <div class="hero-cta">
+                    <button class="btn btn-primary" onclick="scrollToFeature('buddy-program')">Get Started</button>
+                    <button class="btn btn-secondary">Learn More</button>
+                </div>
+            </div>
+
+            <div class="features-container">
+                <!-- Feature 1: Buddy Program -->
+                <div id="buddy-program" class="features-grid" style="grid-column: 1 / -1; margin-bottom: 60px;">
+                    <div class="feature-card">
+                        <div class="feature-number">1</div>
+                        <div class="feature-title">Buddy Program</div>
+                        <div class="feature-desc">Learn from senior architects in a structured 10-week mentorship program. Get free training, certifications, and hands-on guidance.</div>
+                        <ul class="feature-list">
+                            <li>Learn to build production-ready AI agents</li>
+                            <li>Free certifications ($750-1,200 value)</li>
+                            <li>Earn $50-100/week stipend as junior</li>
+                            <li>Seniors get $500 referral bonuses</li>
+                            <li>Build portfolio with real projects</li>
+                        </ul>
+                        <div class="feature-cta">
+                            <button class="feature-btn">Join Next Cohort</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 2: Problem Intake & Recommendations -->
+                <div class="features-grid" style="grid-column: 1 / -1; margin-bottom: 60px;">
+                    <div class="feature-card">
+                        <div class="feature-number">2</div>
+                        <div class="feature-title">Problem Intake & Recommendations</div>
+                        <div class="feature-desc">See client problems and help shape the solutions. Understand the full scope before bidding. Build governance frameworks with AI recommendations.</div>
+                        <ul class="feature-list">
+                            <li>Access to all incoming client problems</li>
+                            <li>AI-generated recommendations & compliance checklists</li>
+                            <li>Understand scope, budget, timeline upfront</li>
+                            <li>See cost estimates & feasibility analysis</li>
+                            <li>Build solutions with confidence</li>
+                        </ul>
+                        <div class="feature-cta">
+                            <button class="feature-btn">View Open Requests</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 3: Freelancer Matching & Group Bidding -->
+                <div class="features-grid" style="grid-column: 1 / -1; margin-bottom: 60px;">
+                    <div class="feature-card">
+                        <div class="feature-number">3</div>
+                        <div class="feature-title">Freelancer Matching & Group Bidding</div>
+                        <div class="feature-desc">Be matched with projects based on your skills, or submit competitive bids. Team up with other architects on larger projects.</div>
+                        <ul class="feature-list">
+                            <li>Algorithmic matching based on 5 factors</li>
+                            <li>Direct matches for your expertise level</li>
+                            <li>Submit bids on custom requests</li>
+                            <li>Collaborate with junior/senior architects</li>
+                            <li>Negotiate rates & timelines directly</li>
+                        </ul>
+                        <div class="feature-cta">
+                            <button class="feature-btn">See Your Matches</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 4: Community & Revenue Sharing -->
+                <div class="features-grid" style="grid-column: 1 / -1; margin-bottom: 60px;">
+                    <div class="feature-card">
+                        <div class="feature-number">4</div>
+                        <div class="feature-title">Community & Revenue Sharing</div>
+                        <div class="feature-desc">Earn 50-80% on every project. All infrastructure managed. Solutions sell repeatedly on our marketplace for passive income.</div>
+                        <ul class="feature-list">
+                            <li>50-80% revenue share on implementation</li>
+                            <li>Zero DevOps overhead (we manage infra)</li>
+                            <li>Solutions sold on marketplace = passive income</li>
+                            <li>Community forums & peer support</li>
+                            <li>Quarterly awards & recognition program</li>
+                        </ul>
+                        <div class="feature-cta">
+                            <button class="feature-btn">See Earnings Model</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value">$13.5K</div>
+                        <div class="stat-label">Average 6-month earnings (junior)</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">$24K</div>
+                        <div class="stat-label">Average 6-month earnings (mid-level)</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">50-80%</div>
+                        <div class="stat-label">Revenue share on projects</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CUSTOMER PATH -->
+        <div id="customerPath" style="display:none;">
+            <div class="hero">
+                <h1>Deploy AI Agents in Weeks, Not Months</h1>
+                <p>Browse pre-built solutions or post your requirements. Vetted freelancers compete to build your AI agent with enterprise governance included.</p>
+                <div class="hero-cta">
+                    <button class="btn btn-primary" onclick="scrollToFeature('marketplace')">Browse Solutions</button>
+                    <button class="btn btn-secondary" onclick="scrollToFeature('submit-request')">Submit Request</button>
+                </div>
+            </div>
+
+            <div class="features-container">
+                <!-- Feature 1: Pre-Built Solutions Marketplace -->
+                <div id="marketplace" style="margin-bottom: 80px;">
+                    <h2 class="section-title">Pre-Built Solutions Marketplace</h2>
+                    <p class="section-subtitle">Buy ready-to-deploy AI agents. Deploy in 2 weeks. Support included.</p>
+
+                    <div class="marketplace-grid">
+                        <!-- Solution 1 -->
+                        <div class="solution-card">
+                            <div class="solution-header">
+                                <div class="solution-title">Customer Service Agent</div>
+                                <div class="solution-desc">by Priya Sharma · ⭐ 4.8</div>
+                            </div>
+                            <div class="solution-body">
+                                <div class="solution-content">Multi-channel support (email, Teams, Slack). 60% ticket resolution rate.</div>
+                                <div class="solution-price">$8.5K</div>
+                                <div class="solution-timeline">⏱ Deploy in 2 weeks</div>
+                                <button class="deploy-btn">Deploy Solution</button>
+                            </div>
+                        </div>
+
+                        <!-- Solution 2 -->
+                        <div class="solution-card">
+                            <div class="solution-header">
+                                <div class="solution-title">Invoice Processing</div>
+                                <div class="solution-desc">by Raj Patel · ⭐ 4.9</div>
+                            </div>
+                            <div class="solution-body">
+                                <div class="solution-content">Extracts invoice data from PDFs. 99.2% accuracy. Integrates SAP/Oracle.</div>
+                                <div class="solution-price">$12K</div>
+                                <div class="solution-timeline">⏱ Deploy in 2 weeks</div>
+                                <button class="deploy-btn">Deploy Solution</button>
+                            </div>
+                        </div>
+
+                        <!-- Solution 3 -->
+                        <div class="solution-card">
+                            <div class="solution-header">
+                                <div class="solution-title">Fraud Detection</div>
+                                <div class="solution-desc">by Arjun Kumar · ⭐ 4.9</div>
+                            </div>
+                            <div class="solution-body">
+                                <div class="solution-content">Detects anomalies in real-time. SIEM-integrated. PCI-compliant.</div>
+                                <div class="solution-price">$15K</div>
+                                <div class="solution-timeline">⏱ Deploy in 2 weeks</div>
+                                <button class="deploy-btn">Deploy Solution</button>
+                            </div>
+                        </div>
+
+                        <!-- Solution 4 -->
+                        <div class="solution-card">
+                            <div class="solution-header">
+                                <div class="solution-title">HR Onboarding</div>
+                                <div class="solution-desc">by Neha Singh · ⭐ 4.7</div>
+                            </div>
+                            <div class="solution-body">
+                                <div class="solution-content">Automates new hire workflows. Integrates with ServiceNow.</div>
+                                <div class="solution-price">$6.5K</div>
+                                <div class="solution-timeline">⏱ Deploy in 2 weeks</div>
+                                <button class="deploy-btn">Deploy Solution</button>
+                            </div>
+                        </div>
+
+                        <!-- Solution 5 -->
+                        <div class="solution-card">
+                            <div class="solution-header">
+                                <div class="solution-title">Supply Chain Forecast</div>
+                                <div class="solution-desc">by Ananya Desai · ⭐ 4.8</div>
+                            </div>
+                            <div class="solution-body">
+                                <div class="solution-content">Predicts inventory needs. Reduces stockouts by 35%.</div>
+                                <div class="solution-price">$14K</div>
+                                <div class="solution-timeline">⏱ Deploy in 2 weeks</div>
+                                <button class="deploy-btn">Deploy Solution</button>
+                            </div>
+                        </div>
+
+                        <!-- Solution 6 -->
+                        <div class="solution-card">
+                            <div class="solution-header">
+                                <div class="solution-title">Compliance & Audit</div>
+                                <div class="solution-desc">by Vikram Iyer · ⭐ 4.8</div>
+                            </div>
+                            <div class="solution-body">
+                                <div class="solution-content">Auto-generates audit reports. Tracks regulatory changes.</div>
+                                <div class="solution-price">$11K</div>
+                                <div class="solution-timeline">⏱ Deploy in 2 weeks</div>
+                                <button class="deploy-btn">Deploy Solution</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature 2: Submit Request for Bidding -->
+                <div id="submit-request" style="margin-bottom: 60px;">
+                    <h2 class="section-title">Submit Your AI Agent Request</h2>
+                    <p class="section-subtitle">Don't see what you need? Post your requirements. Vetted freelancers will submit competitive bids.</p>
+
+                    <div class="features-grid" style="grid-column: 1 / -1;">
+                        <div class="feature-card">
+                            <div class="feature-number">2</div>
+                            <div class="feature-title">Submit Request for Freelancer Bidding</div>
+                            <div class="feature-desc">Describe your AI agent needs. Multiple vetted architects submit competitive bids within 48 hours. Compare pricing, portfolios, and timelines. Pick the best fit.</div>
+                            <ul class="feature-list">
+                                <li>Post your AI agent requirements</li>
+                                <li>Multiple freelancers submit bids</li>
+                                <li>Compare rates & expertise side-by-side</li>
+                                <li>Interview freelancers before deciding</li>
+                                <li>Custom solutions tailored to your needs</li>
+                            </ul>
+                            <div class="feature-cta">
+                                <button class="feature-btn">Submit Your Request</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-value">2 weeks</div>
+                        <div class="stat-label">Average time to deployment</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">$6.5K - $15K</div>
+                        <div class="stat-label">Solution cost range</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">60%</div>
+                        <div class="stat-label">Avg automation rate</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 pehal.ai. The AI Agent Marketplace with Enterprise Governance.</p>
+    </footer>
+
+    <script>
+        function selectRole(role) {
+            const landingScreen = document.getElementById('landingScreen');
+            const mainContent = document.getElementById('mainContent');
+            const freelancerPath = document.getElementById('freelancerPath');
+            const customerPath = document.getElementById('customerPath');
+            const roleBadge = document.getElementById('roleBadge');
+            const switchRoleBtn = document.getElementById('switchRoleBtn');
+
+            landingScreen.classList.add('hidden');
+            mainContent.classList.add('active');
+            switchRoleBtn.style.display = 'block';
+
+            if (role === 'freelancer') {
+                freelancerPath.style.display = 'block';
+                customerPath.style.display = 'none';
+                roleBadge.textContent = '👤 Freelancer';
+            } else {
+                customerPath.style.display = 'block';
+                freelancerPath.style.display = 'none';
+                roleBadge.textContent = '🏢 Customer';
+            }
+
+            window.scrollTo(0, 0);
+        }
+
+        function switchRole() {
+            document.getElementById('landingScreen').classList.remove('hidden');
+            document.getElementById('mainContent').classList.remove('active');
+            document.getElementById('switchRoleBtn').style.display = 'none';
+            window.scrollTo(0, 0);
+        }
+
+        function scrollToFeature(featureId) {
+            const element = document.getElementById(featureId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        document.getElementById('switchRoleBtn').addEventListener('click', switchRole);
+    </script>
+</body>
+</html>

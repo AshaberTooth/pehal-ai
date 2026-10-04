@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgentFlow - AI Agent Marketplace & Governance Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f5f5f5;
+            border-bottom: 2px solid #e0e0e0;
+            overflow-x: auto;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.3s;
+            white-space: nowrap;
+            min-width: 150px;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .tab-btn:hover {
+            background: #fafafa;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 40px;
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .intake-form {
+            max-width: 500px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .recommendations {
+            display: grid;
+            gap: 20px;
+        }
+
+        .agent-card {
+            background: #f9f9f9;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .agent-card:hover {
+            background: #fff;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.15);
+            transform: translateX(5px);
+        }
+
+        .agent-name {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .agent-desc {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .agent-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85em;
+            color: #999;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #e8e8ff;
+            color: #667eea;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        .governance-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .governance-item {
+            background: #f0f4ff;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .governance-item h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .checklist {
+            list-style: none;
+        }
+
+        .checklist li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #666;
+        }
+
+        .checklist li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .marketplace {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .solution-card {
+            background: #f9f9f9;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .solution-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .solution-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+        }
+
+        .solution-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .solution-freelancer {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .solution-body {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .solution-desc {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .solution-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.75em;
+            color: #999;
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
+
+        .tech-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .tech-tag {
+            background: #e8e8ff;
+            color: #667eea;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .solution-price {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .solution-action {
+            background: #667eea;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            width: 100%;
+        }
+
+        .solution-action:hover {
+            background: #764ba2;
+        }
+
+        .moat-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .moat-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .moat-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+
+        .moat-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .moat-title {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .moat-desc {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .metric-chart {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .metric-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .metric-label {
+            width: 200px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .metric-bar {
+            flex: 1;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 0 15px;
+        }
+
+        .metric-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+
+        .metric-value {
+            width: 60px;
+            text-align: right;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            display: flex;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .timeline-marker {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            flex-shrink: 0;
+            margin-right: 20px;
+        }
+
+        .timeline-content {
+            flex: 1;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+        }
+
+        .timeline-content h3 {
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .timeline-content p {
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .highlight {
+            background: #fffacd;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #ffa500;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .governance-section {
+                grid-template-columns: 1fr;
+            }
+
+            .moat-section {
+                grid-template-columns: 1fr;
+            }
+
+            .marketplace {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .metric-label {
+                width: 120px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 AgentFlow</h1>
+            <p>AI Agent Marketplace with Intelligent Governance & Multi-Cloud Deployment</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('intake')">1. Intake & Recommendations</button>
+            <button class="tab-btn" onclick="switchTab('marketplace')">2. Solution Marketplace</button>
+            <button class="tab-btn" onclick="switchTab('moats')">3. Our MOATs</button>
+            <button class="tab-btn" onclick="switchTab('freelancer')">4. Freelancer Network</button>
+            <button class="tab-btn" onclick="switchTab('economics')">5. Unit Economics</button>
+        </div>
+
+        <!-- TAB 1: INTAKE & RECOMMENDATIONS -->
+        <div id="intake" class="tab-content active">
+            <h2>📋 Problem Intake → AI Agent Recommendation</h2>
+            <p style="color: #666; margin-bottom: 20px;">Tell us your business problem and tech stack. We'll recommend agents, governance framework, and compliance checklist.</p>
+            
+            <div class="intake-form">
+                <div class="form-group">
+                    <label>Industry *</label>
+                    <select id="industry" onchange="generateRecommendations()">
+                        <option value="">Select Industry</option>
+                        <option value="banking">Banking & Financial Services</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="retail">Retail & E-commerce</option>
+                        <option value="manufacturing">Manufacturing</option>
+                        <option value="telecom">Telecom</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Business Problem *</label>
+                    <textarea id="problem" placeholder="e.g., Reduce customer support ticket resolution time, Automate invoice processing..." onchange="generateRecommendations()"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Preferred Cloud Tech Stack *</label>
+                    <select id="techstack" onchange="generateRecommendations()">
+                        <option value="">Select Primary Cloud</option>
+                        <option value="azure">Microsoft Azure</option>
+                        <option value="aws">Amazon AWS</option>
+                        <option value="gcp">Google Cloud Platform</option>
+                        <option value="hybrid">Hybrid (Multi-cloud)</option>
+                    </select>
+                </div>
+
+                <button onclick="generateRecommendations()" style="width: 100%; margin-top: 10px;">⚡ Generate Recommendations</button>
+            </div>
+
+            <div id="recommendations-container"></div>
+        </div>
+
+        <!-- TAB 2: MARKETPLACE -->
+        <div id="marketplace" class="tab-content">
+            <h2>🏪 Containerized AI Solutions Marketplace</h2>
+            <p style="color: #666; margin-bottom: 30px;">Pre-built, containerized solutions deployed by our freelancer network. Ready to deploy across Azure, AWS, or GCP.</p>
+            
+            <div class="marketplace" id="solutions-grid"></div>
+        </div>
+
+        <!-- TAB 3: MOATs -->
+        <div id="moats" class="tab-content">
+            <h2>🛡️ Our Competitive MOATs</h2>
+            <p style="color: #666; margin-bottom: 30px;">What makes AgentFlow defensible and hard to copy:</p>
+
+            <div class="moat-section">
+                <div class="moat-card">
+                    <div class="moat-icon">🧠</div>
+                    <div class="moat-title">Recommendation Engine</div>
+                    <div class="moat-desc">Machine learning model learns from every intake. Gets smarter with scale. Competitors can't replicate without data.</div>
+                </div>
+
+                <div class="moat-card">
+                    <div class="moat-icon">🔐</div>
+                    <div class="moat-title">Governance IP Library</div>
+                    <div class="moat-desc">Reusable compliance + governance templates across industries. Reduces client risk. Proprietary framework.</div>
+                </div>
+
+                <div class="moat-card">
+                    <div class="moat-icon">🌐</div>
+                    <div class="moat-title">Network Effects</div>
+                    <div class="moat-desc">More freelancers → better solutions → attracts clients → attracts top talent. Two-sided marketplace flywheel.</div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 40px; margin-bottom: 20px;">📈 Growth of Platform Value (Projected)</h3>
+            
+            <div class="metric-chart">
+                <div class="metric-row">
+                    <div class="metric-label">Recommendations/Month</div>
+                    <div class="metric-bar">
+                        <div class="metric-fill" style="width: 30%;">Month 1: 5</div>
+                    </div>
+                    <div class="metric-value">→ 500</div>
+                </div>
+
+                <div class="metric-row">
+                    <div class="metric-label">Freelancers Onboarded</div>
+                    <div class="metric-bar">
+                        <div class="metric-fill" style="width: 25%;">2 → 200</div>
+                    </div>
+                    <div class="metric-value">100x growth</div>
+                </div>
+
+                <div class="metric-row">
+                    <div class="metric-label">Containerized Solutions</div>
+                    <div class="metric-bar">
+                        <div class="metric-fill" style="width: 40%;">1 → 150</div>
+                    </div>
+                    <div class="metric-value">3-6 months</div>
+                </div>
+
+                <div class="metric-row">
+                    <div class="metric-label">Recommendation Accuracy</div>
+                    <div class="metric-bar">
+                        <div class="metric-fill" style="width: 85%;">65% → 92%</div>
+                    </div>
+                    <div class="metric-value">Data-driven</div>
+                </div>
+
+                <div class="metric-row">
+                    <div class="metric-label">Infrastructure Efficiency</div>
+                    <div class="metric-bar">
+                        <div class="metric-fill" style="width: 70%;">Cost savings: 35%</div>
+                    </div>
+                    <div class="metric-value">Multi-cloud</div>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <strong>💡 Key Insight:</strong> Your MOAT is not the technology (anyone can containerize). Your MOAT is the data (governance patterns + agent recommendations) + the network (freelancers + clients).
+            </div>
+        </div>
+
+        <!-- TAB 4: FREELANCER NETWORK -->
+        <div id="freelancer" class="tab-content">
+            <h2>👥 Freelancer Network & Incentive Structure</h2>
+            <p style="color: #666; margin-bottom: 30px;">Join our network, build solutions, earn recurring revenue.</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                <div style="background: #f0f4ff; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea;">
+                    <h3 style="color: #667eea; margin-bottom: 15px;">🎯 For Freelancers</h3>
+                    <ul class="checklist">
+                        <li>20-30% revenue share on all solutions sold</li>
+                        <li>Infrastructure managed by AgentFlow (you don't worry about ops)</li>
+                        <li>Access to governance templates (reduce dev time by 40%)</li>
+                        <li>Community: upskill, collaborate, find partners</li>
+                        <li>Portfolio visibility on marketplace</li>
+                        <li>Buddy program: Get mentored by senior architects</li>
+                    </ul>
+                </div>
+
+                <div style="background: #fff0f4; padding: 20px; border-radius: 8px; border-left: 4px solid #764ba2;">
+                    <h3 style="color: #764ba2; margin-bottom: 15px;">💰 For AgentFlow</h3>
+                    <ul class="checklist">
+                        <li>20-30% commission on every transaction</li>
+                        <li>Own infrastructure & compute costs</li>
+                        <li>Accumulate solution library IP</li>
+                        <li>Network effect: attracts more clients</li>
+                        <li>Data from freelancer behavior → better recommendations</li>
+                        <li>Margin on compute/storage (10-15%)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 20px;">🚀 Freelancer Success Stories (Simulated)</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; border-left: 4px solid #667eea;">
+                    <h4 style="color: #667eea; margin-bottom: 10px;">Priya - AI/ML Engineer</h4>
+                    <p style="color: #666; margin-bottom: 10px;">Built 3 customer service agent solutions using AgentFlow templates</p>
+                    <div style="background: white; padding: 10px; border-radius: 4px; margin-bottom: 10px;">
+                        <strong style="color: #667eea;">Month 1-3:</strong> $5K gross revenue<br>
+                        <strong style="color: #667eea;">Month 4-6:</strong> $18K gross revenue (solutions selling on marketplace)<br>
+                        <strong style="color: #667eea;">Take-home (after 25% commission):</strong> $13.5K
+                    </div>
+                    <p style="font-size: 0.9em; color: #999;">Time invested: 4 hrs/week mentoring in community</p>
+                </div>
+
+                <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; border-left: 4px solid #764ba2;">
+                    <h4 style="color: #764ba2; margin-bottom: 10px;">Raj - Solutions Architect</h4>
+                    <p style="color: #666; margin-bottom: 10px;">Deployed 5 enterprise agent solutions, mentors junior freelancers</p>
+                    <div style="background: white; padding: 10px; border-radius: 4px; margin-bottom: 10px;">
+                        <strong style="color: #764ba2;">Month 1-3:</strong> $12K gross revenue<br>
+                        <strong style="color: #764ba2;">Month 4-6:</strong> $32K gross revenue (passive from marketplace)<br>
+                        <strong style="color: #764ba2;">Take-home (after 25% commission):</strong> $24K
+                    </div>
+                    <p style="font-size: 0.9em; color: #999;">Building "Solution Library" of reusable components</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 5: ECONOMICS -->
+        <div id="economics" class="tab-content">
+            <h2>💹 Unit Economics & Growth Path</h2>
+
+            <h3 style="margin-top: 30px; margin-bottom: 20px;">Revenue Streams</h3>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                <div style="background: #f0f4ff; padding: 20px; border-radius: 8px; border: 2px solid #667eea;">
+                    <div style="font-size: 1.3em; font-weight: 700; color: #667eea; margin-bottom: 10px;">Stream 1: Advisory</div>
+                    <p style="color: #666; margin-bottom: 15px;">Intake + Recommendations + Governance + Compliance Checklist</p>
+                    <div style="background: white; padding: 10px; border-radius: 4px;">
+                        <strong>Free Tier:</strong> Basic intake + 3 recommendations<br>
+                        <strong>Pro Tier:</strong> $500-2K per engagement
+                    </div>
+                </div>
+
+                <div style="background: #f9fff0; padding: 20px; border-radius: 8px; border: 2px solid #667eea;">
+                    <div style="font-size: 1.3em; font-weight: 700; color: #667eea; margin-bottom: 10px;">Stream 2: Transaction</div>
+                    <p style="color: #666; margin-bottom: 15px;">Commission on freelancer deliverables (Agent implementations)</p>
+                    <div style="background: white; padding: 10px; border-radius: 4px;">
+                        <strong>20-30% commission</strong><br>
+                        Average deal: $10-50K<br>
+                        Revenue/deal: $2-15K
+                    </div>
+                </div>
+
+                <div style="background: #fff5f0; padding: 20px; border-radius: 8px; border: 2px solid #667eea;">
+                    <div style="font-size: 1.3em; font-weight: 700; color: #667eea; margin-bottom: 10px;">Stream 3: Infrastructure</div>
+                    <p style="color: #666; margin-bottom: 15px;">Compute, Storage, Deployment Margin</p>
+                    <div style="background: white; padding: 10px; border-radius: 4px;">
+                        <strong>10-15% margin</strong> on Azure/AWS/GCP costs<br>
+                        Recurring per deployed solution
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-bottom: 20px;">📊 Projected P&L (Year 1)</h3>
+
+            <div class="metric-chart">
+                <div class="metric-row">
+                    <div class="metric-label">Intakes (20 clients @ avg $1K)</div>
+                    <div class="metric-bar">
+                        <div class="metric-fill" style="width: 100%; justify-content: center; padding: 0;">$20K</div>
+                    </div>
+                    <div class="metric-value">$20K</div>
+                </div>
+
+                <div class="metric-row">
+                    <div class="metric-label">Transaction Commissions (30 deals @ $8K avg)</div>
+                    <div class="metric-bar">
+                        <div class="metric-fill" style="width: 100%; justify-content: center; padding: 0;">$240K</div>
+                    </div>
+                    <div class="metric-value">$240K</div>
+                </div>
+
+                <div class="metric-row">
+                    <div class="metric-label">Infrastructure Margin (15 active @ $2K/yr)</div>
+                    <div class="metric-bar">
+                        <div class="metric-fill" style="width: 100%; justify-content: center; padding: 0;">$30K</div>
+                    </div>
+                    <div class="metric-value">$30K</div>
+                </div>
+
+                <div style="border-top: 2px solid #667eea; padding-top: 15px; margin-top: 15px;">
+                    <div class="metric-row">
+                        <div class="metric-label" style="font-weight: 700;">Total Revenue</div>
+                        <div style="flex: 1;"></div>
+                        <div class="metric-value" style="font-size: 1.3em; color: #667eea; font-weight: 700;">$290K</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin: 30px 0 20px 0;">🎯 Key Milestones (18 Months)</h3>
+
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-marker">1</div>
+                    <div class="timeline-content">
+                        <h3>Months 0-3: MVP + Beta</h3>
+                        <p>Build intake form → recommendation engine (hardcoded initially) → onboard 5 pilot freelancers → 10 client intakes</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">2</div>
+                    <div class="timeline-content">
+                        <h3>Months 4-6: Product-Market Fit</h3>
+                        <p>First 3-5 deals signed → freelancers deploy solutions → gather customer feedback → improve recommendation engine with real data</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">3</div>
+                    <div class="timeline-content">
+                        <h3>Months 7-12: Scale Freelancers</h3>
+                        <p>Grow freelancer network to 50+ → build solution marketplace → implement buddy/mentorship program → 20+ active clients</p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-marker">4</div>
+                    <div class="timeline-content">
+                        <h3>Months 13-18: Profitability Path</h3>
+                        <p>100+ freelancers → 150+ containerized solutions → 50+ active clients → break-even on platform ops → expand to new verticals</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight" style="margin-top: 30px;">
+                <strong>🎯 Differentiation from competitors:</strong> You're not competing on infrastructure (AWS/Azure handle that). You're competing on speed-to-value (governance + recommendations reduce client time-to-decision by 60%), talent network (access to vetted AI specialists), and cost transparency (multi-cloud portability prevents lock-in).
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const mockSolutions = [
+            {
+                title: "Customer Service Agent (Multimodal)",
+                freelancer: "Priya Sharma",
+                rating: 4.8,
+                deployments: 12,
+                desc: "Handles tickets via email, Teams, chat. NLP + sentiment analysis. Azure OpenAI integration.",
+                cost: "$8,500",
+                tech: ["Azure OpenAI", "Python", "Docker", "Teams API"],
+                saves: "200 hrs/month"
+            },
+            {
+                title: "Invoice Processing Automation",
+                freelancer: "Raj Patel",
+                rating: 4.9,
+                deployments: 8,
+                desc: "Extracts data from invoices (PDF/images). AI-validated. Integrates with SAP/Oracle.",
+                cost: "$12,000",
+                tech: ["Azure Form Recognizer", "Node.js", "Docker", "SAP API"],
+                saves: "150 hrs/month"
+            },
+            {
+                title: "HR Onboarding Assistant",
+                freelancer: "Neha Singh",
+                rating: 4.7,
+                deployments: 15,
+                desc: "Automates new hire workflows. Generates contracts, schedules, sends emails. Chainable with ServiceNow.",
+                cost: "$6,500",
+                tech: ["GPT-4", "Python", "Azure Cosmos", "ServiceNow"],
+                saves: "120 hrs/month"
+            },
+            {
+                title: "Network Security Agent",
+                freelancer: "Arjun Kumar",
+                rating: 4.9,
+                deployments: 6,
+                desc: "Monitors logs, detects anomalies, auto-remediates. SIEM-integrated. HIPAA/PCI compliant.",
+                cost: "$15,000",
+                tech: ["Azure Sentinel", "Go", "Kubernetes", "Docker"],
+                saves: "250 hrs/month"
+            },
+            {
+                title: "Supply Chain Demand Forecasting",
+                freelancer: "Ananya Desai",
+                rating: 4.8,
+                deployments: 5,
+                desc: "Predicts inventory needs using ML. Integrates with ERP. Reduces stockouts by 35%.",
+                cost: "$14,000",
+                tech: ["Azure ML", "Python", "Spark", "Docker"],
+                saves: "$500K/year"
+            },
+            {
+                title: "Compliance & Audit Agent",
+                freelancer: "Vikram Iyer",
+                rating: 4.8,
+                deployments: 9,
+                desc: "Auto-generates audit reports. Tracks regulatory changes. Alerts on non-compliance.",
+                cost: "$11,000",
+                tech: ["Azure OpenAI", "Python", "PostgreSQL", "Docker"],
+                saves: "180 hrs/month"
+            }
+        ];
+
+        const recommendations = {
+            banking: {
+                agents: ["Fraud Detection Agent", "KYC Verification Bot", "Customer Onboarding Agent", "Transaction Risk Agent"],
+                governance: ["Data Privacy Framework (GDPR/CCPA)", "Audit Trail Requirements", "Explainability for Model Decisions", "Segregation of Duties"],
+                compliance: ["SOC 2 Type II", "PCI DSS 3.2.1", "Regulatory Reporting", "Model Risk Management"]
+            },
+            healthcare: {
+                agents: ["Patient Scheduling Agent", "Medical Record Summarizer", "Appointment Reminder Bot", "Billing Assistance Agent"],
+                governance: ["HIPAA Compliance Framework", "Data De-identification", "Consent Management", "Audit Controls"],
+                compliance: ["HIPAA", "HITECH", "Data Residency", "Encryption Standards"]
+            },
+            retail: {
+                agents: ["Inventory Optimization Agent", "Customer Service Chatbot", "Demand Forecasting Agent", "Personalization Engine"],
+                governance: ["Customer Data Framework", "Recommendation Transparency", "Fairness Auditing", "Right to Explanation"],
+                compliance: ["GDPR", "Data Retention", "Marketing Consent", "Return/Refund Automation"]
+            },
+            manufacturing: {
+                agents: ["Predictive Maintenance Agent", "Supply Chain Optimizer", "Quality Assurance Bot", "Production Scheduler"],
+                governance: ["Equipment Data Handling", "Safety Compliance", "Change Management", "Model Versioning"],
+                compliance: ["ISO 9001", "Industry 4.0", "Safety Regulations", "Environmental Standards"]
+            },
+            telecom: {
+                agents: ["Network Anomaly Detector", "Customer Churn Prediction", "Bill Dispute Resolution", "Service Provisioning Agent"],
+                governance: ["Network Security", "Customer Privacy", "Billing Accuracy", "Escalation Procedures"],
+                compliance: ["FCC Regulations", "Telecom Data Privacy", "Accessibility (ADA)", "Emergency Services"]
+            }
+        };
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove active class from buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            // Auto-populate marketplace on first visit
+            if (tabName === 'marketplace' && !document.getElementById('solutions-grid').innerHTML) {
+                populateMarketplace();
+            }
+        }
+
+        function generateRecommendations() {
+            const industry = document.getElementById('industry').value;
+            const problem = document.getElementById('problem').value;
+            const techstack = document.getElementById('techstack').value;
+
+            if (!industry || !problem || !techstack) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            const rec = recommendations[industry] || recommendations.banking;
+            
+            let html = `
+                <div style="margin-top: 30px;">
+                    <h3 style="color: #667eea; margin-bottom: 20px;">✅ Recommendations for ${industry.toUpperCase()}</h3>
+                    
+                    <div class="governance-section">
+                        <div class="governance-item">
+                            <h3>🤖 Recommended Agents</h3>
+                            <ul class="checklist">
+                                ${rec.agents.map(agent => `<li>${agent}</li>`).join('')}
+                            </ul>
+                        </div>
+                        
+                        <div class="governance-item">
+                            <h3>🛡️ Governance Framework</h3>
+                            <ul class="checklist">
+                                ${rec.governance.map(g => `<li>${g}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="governance-item" style="grid-column: 1 / -1;">
+                        <h3>📋 Compliance Checklist</h3>
+                        <ul class="checklist">
+                            ${rec.compliance.map(c => `<li>${c}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div style="margin-top: 20px; padding: 15px; background: #e8f5e9; border-radius: 6px; border-left: 4px solid #4caf50;">
+                        <strong style="color: #2e7d32;">Next Step:</strong> Browse our Solution Marketplace to see pre-built agents. Click on "2. Solution Marketplace" tab.
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('recommendations-container').innerHTML = html;
+        }
+
+        function populateMarketplace() {
+            let html = '<div class="marketplace">';
+            mockSolutions.forEach(sol => {
+                html += `
+                    <div class="solution-card">
+                        <div class="solution-header">
+                            <div class="solution-title">${sol.title}</div>
+                            <div class="solution-freelancer">by ${sol.freelancer}</div>
+                        </div>
+                        <div class="solution-body">
+                            <div class="solution-desc">${sol.desc}</div>
+                            <div class="solution-stats">
+                                <div class="stat">
+                                    <div class="stat-value">⭐ ${sol.rating}</div>
+                                    <div class="stat-label">Rating</div>
+                                </div>
+                                <div class="stat">
+                                    <div class="stat-value">${sol.deployments}</div>
+                                    <div class="stat-label">Deployed</div>
+                                </div>
+                                <div class="stat">
+                                    <div class="stat-value">${sol.saves}</div>
+                                    <div class="stat-label">Saves</div>
+                                </div>
+                            </div>
+                            <div class="tech-tags">
+                                ${sol.tech.map(t => `<span class="tech-tag">${t}</span>`).join('')}
+                            </div>
+                            <div class="solution-price">${sol.cost}</div>
+                            <button class="solution-action" onclick="alert('Deployment configured! Your freelancer will be contacted.')">Deploy Solution</button>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            document.getElementById('solutions-grid').innerHTML = html;
+        }
+
+        // Auto-load marketplace
+        window.addEventListener('load', () => {
+            populateMarketplace();
+        });
+    </script>
+</body>
+</html>
